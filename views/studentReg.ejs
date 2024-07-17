@@ -1,0 +1,185 @@
+<style>
+    .student-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa; /* Light gray background */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+form {
+  width: 100%;
+  max-width: 400px; /* Limiting form width for better readability */
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da; /* Light gray border */
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+  font-size: 1.2rem;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="file"]:focus,
+select:focus {
+  outline: none;
+  border-color: #007bff; /* Blue border on focus */
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background-color:   rgb(12, 160, 12);
+  /* Blue button color */
+  color: #fff; /* White text color */
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color:   rgb(10, 117, 10); /* Darker blue on hover */
+}
+
+button#back {
+  margin-top: 20px;
+  background-color: #6c757d; /* Gray button color */
+}
+
+button#back:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+</style>
+<div class="student-container">
+    <form action="/api/student/signup" method="POST" enctype="multipart/form-data">
+        <div class="name">
+            <label>Enter passport</label>
+            <input type="file" name="file">
+        </div>
+    
+        <div class="name">
+            <label>Enter fullname</label>
+            <input type="text" placeholder="Surname first" name="name">
+        </div>
+    
+        <div class="matno">
+            <label>Enter MatNo</label>
+            <input type="text" placeholder="e.g cba/csc/18/0001" name="matNo">
+        </div>
+    
+        <div class="email">
+            <label>Enter email</label>
+            <input type="email" placeholder="" name="email">
+        </div>
+    
+        <div class="phoneno">
+            <label>Enter phone Number</label>
+            <input type="text" name="phone">
+        </div>
+    
+        <div class="password">
+            <label>Enter password</label>
+            <input type="password" name="password">
+        </div>
+    
+        <div class="conf-password">
+            <label>Confirm password</label>
+            <input type="password" name="conpassword">
+        </div>
+    
+        <div class="gender">
+            <select name="gender" id="">
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+    
+        <div class="faculty">
+            
+            <% if (data.length > 0){ %>
+                <select name="fact" id="fact" >
+                    <option value="">Select faculty</option>
+                    <% for(let i of data){%>
+                        <option value="<%= i.fact %>" data-fact="<%= i.fact %>" data-factId="<%= i._id %>"><%= i.fact %></option>
+                       <%}%>
+                </select>
+                <% } %>
+        </div>
+    
+        <div class="department">
+     
+                <select name="dept" id="dept">
+                    <option value="">Select department</option>
+                </select>
+           
+        </div>
+    <script>
+ const fact = document.getElementById('fact')
+ const dept = document.getElementById('dept')
+ fact.oninput = async function(event){
+    try{
+        const selectedOption = fact.options[fact.selectedIndex];
+        const faculty = selectedOption.getAttribute('data-fact')
+        const facultyId = selectedOption.getAttribute('data-factId')
+        console.log(faculty + ' '+ facultyId)
+        const res = await fetch(`/api/student/fetch-depts`,{
+            method:'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({id:facultyId,facts:faculty})
+        })
+        const json = await res.json()
+
+        if(res.ok){
+            console.log(json.data)
+            
+            for(let i of json.data){
+                const option = document.createElement('option')
+                option.innerHTML = i
+                option.setAttribute('value',`${i}`)
+                dept.appendChild(option)
+            }
+            console.log(dept)
+        }
+    }catch(error){
+        console.log(error.message)
+    }
+ }
+    </script>
+        
+        <div class="scratchCard">
+            <label>Enter scratch card</label>
+            <input type="password" name="scratchCard">
+        </div>
+        <button>create account</button>
+    </form>
+    
+    <button id="back">Back to home</button>
+</div>
+<script>
+const isBack = document.getElementById('back')
+isBack.onclick = (event)=>{
+    window.history.back()
+}
+</script>

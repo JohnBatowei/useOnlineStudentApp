@@ -1,0 +1,148 @@
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .view-courses-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .registrateredCourses h4 {
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .result-table th, .result-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result-table th {
+            background-color: #23334488;
+            /* background-color: #007BFF;
+            color: #fff; */
+        }
+
+        .result-table tfoot th {
+            background-color: #f1f1f1;
+        }
+
+        h5 {
+            text-align: right;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.print {
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .view-courses-container {
+                padding: 15px;
+            }
+
+            .result-table th, .result-table td {
+                padding: 8px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+    <div class="view-courses-container">
+        <% if (registrateredCourses) { %>
+            <div class="registrateredCourses">
+                <h4>Session: <%= registrateredCourses.session %></h4>
+                <h4>Level: <%= registrateredCourses.level %></h4>
+                <h4>Semester: <%= registrateredCourses.semester %></h4>
+                <h4>MatNo: <%= registrateredCourses.matNo %></h4>
+                <h4>Name: <%= registrateredCourses.studentName %></h4>
+            </div>
+
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Course Title</th>
+                        <th>Course Code</th>
+                        <th>Course Unit</th>
+                        <th>Course Type</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Course Title</th>
+                        <th>Course Code</th>
+                        <th>Course Unit</th>
+                        <th>Course Type</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <% registrateredCourses.courses.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= item.title %></td>
+                            <td><%= item.courseCode %></td>
+                            <td><%= item.courseUnit %></td>
+                            <td><%= item.type %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+
+            <h5>Total course unit: <%= registrateredCourses.totalUnit %></h5>
+        <% } %>
+
+        <div class="button-container">
+            <button class="print">Print course form</button>
+            <button class="back">Back to previous page</button>
+        </div>
+    </div>
+
+    <script>
+        const prevPage = document.querySelector(".back");
+        prevPage.onclick = function(e) {
+            window.history.back();
+        }
+    </script>
+

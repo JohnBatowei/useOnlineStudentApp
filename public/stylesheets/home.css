@@ -1,0 +1,99 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: steelblue;
+  width: 100%;
+  height: 100vh;
+}
+.container nav {
+  display: flex;
+  place-content: space-between;
+  padding: 12px 20px;
+  width: 100%;
+  background-color: white;
+}
+.container nav a, .container nav label {
+  font-size: 19px;
+  text-decoration: none;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+.container nav a:hover {
+  text-decoration: underline;
+}
+.container .login {
+  margin-top: 8rem;
+  background: rgb(14, 31, 102);
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.container .login .actionBTN {
+  background: tomato;
+  display: flex;
+  width: 100%;
+  place-content: space-between;
+  padding: 6px;
+  margin-bottom: 1em;
+  border-radius: 5px;
+  font-size: 1.3rem;
+}
+.container .login .actionBTN button {
+  border: none;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 1em;
+  border-radius: 4px;
+  background-color: tomato;
+}
+.container .login .actionBTN button:hover {
+  background-color: whitesmoke;
+  color: #000;
+}
+.container .login .std-staff h3 {
+  color: rgb(207, 207, 207);
+  font-size: 2rem;
+}
+.container .login .std-staff input, .container .login .std-staff button {
+  font-size: 19px;
+  padding: 8px 13px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  margin-top: 1rem;
+  outline: none;
+}
+.container .login .std-staff input:focus {
+  border-color: rgba(7, 192, 22, 0.795);
+}
+.container .login .std-staff button {
+  background: rgba(7, 192, 22, 0.795);
+  cursor: pointer;
+  color: white;
+}
+.container .login .std-staff button:hover {
+  background: rgba(3, 151, 15, 0.76);
+}
+
+.active {
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+.staff {
+  display: none;
+}
+
+.show {
+  display: block;
+}/*# sourceMappingURL=home.css.map */

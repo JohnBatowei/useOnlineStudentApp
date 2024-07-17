@@ -1,0 +1,118 @@
+
+
+<div class="container">
+    <nav>
+        <label for="">Logo</label>
+        <div class="account">
+            <a href="/student-signup">Signup as a student</a>
+        </div>
+    </nav>
+
+    <div class="login">
+        <div class="actionBTN">
+            <button class="active" id="action">login as student</button>
+            <button id="action">login as staff</button>
+        </div>
+        <div class="student std-staff">
+            <h3>Student Portal</h3>
+            <form>
+                <input type="text" placeholder="Enter MatNo">
+                <input type="password" placeholder="Enter Password">
+                <button>login</button>
+            </form>
+        </div>
+        <div class="staff std-staff">
+            <h3>Staff Portal</h3>
+            <form>
+                <input type="text" placeholder="Enter Staff ID" class="form2" required>
+                <input type="password" placeholder="Enter Password" class="form2" required>
+                <button>login</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+const action = document.querySelectorAll('#action')
+const student = document.querySelector('.student')
+const staff = document.querySelector('.staff')
+
+action[0].onclick = function(e){
+    action[0].classList.add('active')
+    action[1].classList.remove('active')
+    student.classList.remove('staff')
+    staff.classList.add('staff')
+    staff.classList.remove('show') 
+}
+action[1].onclick = function(e){
+    action[0].classList.remove('active')
+    action[1].classList.add('active')
+    student.classList.add('staff')
+    staff.classList.add('show')
+}
+
+const form = document.querySelectorAll('form')
+const form2 = document.querySelectorAll('.form2')
+
+
+
+form[0].onsubmit = async (event)=>{
+        event.preventDefault()
+        
+        try {
+            const route = '/api/student/login'
+            const target = event.target
+            const matNo = target[0].value.toLowerCase()
+            const password = target[1].value
+
+            
+            const formData = {matNo,password}
+                console.log(formData)
+            const res = await fetch(route,{
+             method:'POST',
+               headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            })
+            const json = await res.json()
+
+            if(!res.ok){
+                throw Error(json.data)
+            }
+            // this will take us the staff page
+            window.location.href = json.data
+            // alert('you have logged in')
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+form[1].onsubmit = async (event)=>{
+        event.preventDefault()
+        
+        try {
+            const route = '/api/staff/login'
+            const target = event.target
+            const staffId = form2[0].value.toLowerCase()
+            const password = form2[1].value
+
+            
+            const formData = {staffId,password}
+            console.log(formData)
+            const res = await fetch(route,{
+             method:'POST',
+               headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            })
+            const json = await res.json()
+
+            if(!res.ok){
+                throw Error(json.data)
+            }
+            // this will take us the staff page
+            window.location.href = json.data
+            // alert('you have logged in')
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+</script>

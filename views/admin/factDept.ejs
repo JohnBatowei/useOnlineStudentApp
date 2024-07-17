@@ -1,0 +1,283 @@
+
+<head>
+
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.active5 {
+    background: steelblue;
+}
+
+.fact-dept {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fact-dept h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007BFF;
+    text-align: center;
+}
+
+.fact-dept form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.fact-dept input[type="text"],
+.fact-dept select {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.fact-dept button {
+    padding: 10px 20px;
+    background-color:  rgb(12, 160, 12);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.fact-dept button:hover {
+    background-color: rgb(10, 117, 10);
+}
+
+.card {
+    max-width: 1000px;
+    margin: 50px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.card-header {
+    background-color: #233344;
+    color: white;
+    padding: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #23334488;
+    /* background-color: #007BFF;
+    color: white; */
+}
+
+td a {
+    text-decoration: none;
+    padding: 6px 14px;
+    background: #007bff00;
+    /* color: white; */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+td a:hover {
+    background-color: #8fc2f8;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #999;
+}
+
+    </style>
+</head>
+
+
+<div class="fact-dept">
+    <h2>Create Faculty and Department Portal</h2>
+    <form id="createSession">
+        <input type="text" placeholder="Academic/Session e.g 2022/2023" name="academicSession" required>
+        <button>Create Academic Session</button>
+    </form>
+    <script>
+        const cS = document.getElementById('createSession')
+        cS.onsubmit = async function(e){
+            try {
+                e.preventDefault()
+                const route = "/api/admin/create-academicSession"
+                const fbody = { academicSession: e.target[0].value }
+                const res = await fetch(route, {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fbody)
+                })
+                const json = await res.json()
+                if (!res.ok) {
+                    throw Error(json.data)
+                }
+                alert(`${json.data}`)
+                window.location.reload()
+            } catch (error) {
+                alert(error.message)
+                console.log(error.message)
+            }
+        }
+    </script>
+    <form class="form1">
+        <input type="text" placeholder="Enter name of faculty" id="fact">
+        <button>Create</button>
+    </form>
+    <form class="form2" action="/api/admin/gen-dept" method="POST">
+        <select name="fact" id="">
+            <option value="">Select Faculty</option>
+            <% if(fact.length > 0){ %>
+                <% fact.forEach(fac => { %>
+                    <option value="<%= fac.fact %>"><%= fac.fact %></option>
+                <% }) %>
+            <% } %>
+        </select>
+        <input type="text" placeholder="Enter name of department" name="dept">
+        <button>Create</button>
+    </form>
+</div>
+
+<script>
+    const form1 = document.querySelector('.form1')
+    form1.onsubmit = async function(e){
+        try {
+            e.preventDefault()
+            const route = '/api/admin/gen-fact-dept'
+            const body = { fact: document.getElementById('fact').value }
+            const res = await fetch(route, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            const json = await res.json()
+            if (!res.ok) {
+                throw Error(json.data)
+            }
+            window.location.reload()
+        } catch (error) {
+            alert(error.message)
+            console.log(error.message)
+        }
+    }
+</script>
+
+<div class="card mb-3" id="stock">
+    <div class="card-header" id="admin-table-head">
+        <i class="fas fa-table"></i> Faculties
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Faculty</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Faculty</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <% if(fact.length > 0){ %>
+                        <% fact.forEach((item, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><a href="/api/admin/view-depts/<%= item._id %>" style="text-transform:capitalize"><%= item.fact %></a></td>
+                                <td><a href='/api/admin/delete-fact/<%= item._id %>'>Delete</a></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" class="no-data">No data yet</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3" id="stock">
+    <div class="card-header" id="admin-table-head">
+        <i class="fas fa-table"></i> Academic Sessions
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Academic Session</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Academic Session</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <% if(academicSession.length > 0){ %>
+                        <% academicSession.forEach((item, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><%= item.academicSession %></td>
+                                <td><a href='/api/admin/delete-fact/<%= item._id %>'>Delete</a></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" class="no-data">No data yet</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

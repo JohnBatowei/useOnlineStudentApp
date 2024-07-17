@@ -1,0 +1,208 @@
+<head>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.upload-result-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+h3 span {
+    text-transform: uppercase;
+    color: steelblue;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#upload {
+    margin-top: 20px;
+}
+
+i#score,
+#submit {
+    width: 100%;
+    padding: 10px 30px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+#submit {
+    background-color: rgb(12, 160, 12);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: fit-content;
+}
+
+#submit:hover {
+    background-color:  rgb(10, 117, 10);
+}
+
+.back {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back:hover {
+    background-color: #0056b3;
+}
+
+/* #uploadResults{
+    display: flex;
+} */
+        
+    </style>
+</head>
+
+    <h3>Upload Result Portal</h3>
+    <h3>Name: <span><%= data.studentName %></span></h3>
+    <h3>Session: <span><%= data.session %></span></h3>
+    <h3>Semester: <span><%= data.semester %> Semester</span></h3>
+    <h3>Level: <span><%= data.level %></span></h3>
+    <h3>MatNo: <span><%= data.matNo %></span></h3>
+
+    <select id="course">
+        <option>Select Course</option>
+        <% if (data && data.courses) { %>
+            <% data1.forEach((item) => { %>
+                <option value="<%= item._id %>" data-courseid="<%= item._id %>" data-stdtregid="<%= data._id %>">
+                    <%= item.courseCode %> | <%= item.title %>
+                </option>
+            <% }); %>
+        <% } %>
+    </select>
+
+    <div id="upload">
+        <form id="uploadResults"></form>
+    </div>
+
+    <button class="back">Back to the previous page</button>
+
+    <script>
+        const course = document.getElementById('course');
+        const createForm = document.getElementById('uploadResults');
+
+        course.oninput = async function (event) {
+            try {
+                event.preventDefault();
+                const selectedOption = course.options[course.selectedIndex];
+                const studentRegId = selectedOption.getAttribute('data-stdtregid');
+                const courseId = selectedOption.getAttribute('data-courseid');
+
+                const res = await fetch(`/api/admin/validate-course`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId: studentRegId, courseId: courseId })
+                });
+
+                const json = await res.json();
+
+                if (res.ok) {
+                    const div = document.createElement('div');
+                    const grade = document.createElement('input');
+                    const score = document.createElement('input');
+                    const btn = document.createElement('button');
+
+                    grade.setAttribute('placeholder', 'Enter grade');
+                    grade.setAttribute('data-coursetitle', json.data.title);
+                    grade.setAttribute('data-coursecode', json.data.courseCode);
+                    grade.setAttribute('data-courseid', json.data._id);
+                    grade.setAttribute('data-std', json.std);
+                    grade.setAttribute('id', 'score');
+                    score.setAttribute('placeholder', 'Enter score');
+                    score.setAttribute('id', 'score');
+                    div.innerHTML = `Enter Grade and Score for ${json.data.title} course`;
+                    btn.innerHTML = 'Upload result';
+                    btn.setAttribute('id', 'submit');
+
+                    // Clear existing form content
+                    createForm.innerHTML = '';
+                    createForm.append(div, grade, score, btn);
+
+                    // Event listener for the dynamic form
+                    createForm.addEventListener('submit', async function (event) {
+                        try {
+                            event.preventDefault();
+
+                            const formData = {
+                                studentRegId: '<%= data._id %>',
+                                session: '<%= data.session %>',
+                                matNo: '<%= data.matNo %>',
+                                semester: '<%= data.semester %>',
+                                level: '<%= data.level %>',
+                                staffId: '<%= id %>',
+                                courseTitle: grade.getAttribute('data-coursetitle'),
+                                coursCode: grade.getAttribute('data-coursecode'),
+                                score: score.value,
+                                grade: grade.value,
+                                courseId: grade.getAttribute('data-courseid'),
+                                std: grade.getAttribute('data-std'),
+                            };
+
+                            console.log(formData);
+                            const resp = await fetch(`/api/admin/upload-result`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(formData)
+                            });
+
+                            const jsond = await resp.json();
+
+                            if (resp.ok) {
+                                alert(jsond.data);
+                                window.location.reload();
+                            } else {
+                                alert(jsond.data);
+                            }
+                        } catch (error) {
+                            console.error(error.message);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        document.querySelector(".back").onclick = function () {
+            window.history.back();
+        };
+    </script>
+

@@ -1,0 +1,248 @@
+
+<head>
+    <style>
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.scratch-card-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.scratch-card-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #007BFF;
+    text-align: center;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+.form2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.form2 .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form2 button {
+    grid-column: 1 / -1;
+    padding: 10px;
+    background-color: rgb(12, 160, 12);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form2 button:hover {
+    background-color: rgb(10, 117, 10);
+}
+
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color:  #233344;
+    color: white;
+    padding: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;  /* Reduced padding */
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    /* background-color: #ff7b00; */
+    background-color: #23334488;
+    /* color: white; */
+}
+
+td form {
+    display: inline-block;
+    margin: 0;
+}
+
+td form button {
+    padding: 5px 10px;  /* Reduced padding */
+    background: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+td form button:hover {
+    background-color: #c9302c;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #999;
+}
+
+#back {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#back:hover {
+    background-color: #0056b3;
+}
+#same{
+  padding: 8px;
+}
+    </style>
+</head>
+
+
+<div class="scratch-card-container">
+    <h2>Faculty of <%= card.fact %></h2>
+    
+    <form class='form2' action="/api/admin/gen-dept-course/<%= card._id %>" method="POST">
+        <select name="fact" id="same">
+            <option value="<%= card.fact %>"><%= card.fact %></option>
+        </select>
+        <select name="dept" id="same">
+            <option value="">Select Department</option>
+            <% for(let i of card.dept){%>
+                <option value="<%= i %>"><%= i %></option>
+            <%}%>
+        </select>
+        <select name="level" id="same">
+            <option value="">Select level</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="400">400</option>
+            <option value="500">500</option>
+            <option value="600">600</option>
+        </select>
+        <input type="text" placeholder="Enter course code" name="courseCode" required>
+        <input type="text" placeholder="Enter course title" name="courseTitle" required>
+        <select name="semester" id="same">
+            <option value="first">first semester</option>
+            <option value="second">second semester</option>
+        </select>
+        <select name="type" id="same">
+            <option value="">Select course curriculum</option>
+            <option value="Core_course">Core course</option>
+            <option value="Elective">Elective</option>
+        </select>
+        <select name="unit" id="same">
+            <option value="">Select unit</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+        <button class="create">Create</button>
+    </form>
+
+    <br>
+    <!-- DataTables Example -->
+    <div class="card mb-3" id="stock">
+        <div class="card-header" id="admin-table-head" style="text-transform:capitalize">
+            <i class="fas fa-table"></i> <%= card.fact %>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Department</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Department</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <% card.dept.map((item, index) => { %> 
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><a href="/api/admin/view-depts-courses/<%= item %>/<%= card.fact %>" style="text-transform:capitalize"><%= item %></a></td>
+                                <td>
+                                    <form action="/api/admin/delete-dept/<%= item %>" method="POST">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="back">Go Back</button>
+
+<script>
+    const isBack = document.getElementById('back');
+    isBack.onclick = (event) => {
+        window.history.back();
+    }
+</script>
+

@@ -1,0 +1,111 @@
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: center;
+  background-color: steelblue;
+  width: 100%;
+  height: 100vh;
+  nav{
+    display: flex;
+    place-content: space-between;
+    padding: 12px 20px;
+    // border: 1px solid red;
+    width: 100%;
+    background-color: white;
+    a,label{
+      // color: #ffffff;
+      font-size: 19px;
+      text-decoration: none;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    a{
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+   
+  }
+
+  .login{
+    margin-top: 8rem;
+    background: rgb(14, 31, 102);
+    padding: 30px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .actionBTN{
+      background: tomato;
+      display: flex;
+      width: 100%;
+      place-content: space-between;
+      padding: 6px;
+      margin-bottom: 1em;
+      border-radius: 5px;
+      font-size: 1.3rem;
+      button{
+        border: none;
+        cursor: pointer;
+        padding: 4px 12px;
+        font-size: 1em;
+        border-radius: 4px;
+        
+        background-color: tomato;
+        &:hover{
+          background-color: whitesmoke;
+          color: #000;
+        }
+      }
+    }
+    .std-staff{
+      h3{
+        color: rgb(207, 207, 207);
+        font-size: 2rem;
+      }
+      input,button{
+        font-size: 19px;
+        padding: 8px 13px;
+        border: 2px solid transparent;
+        border-radius: 5px;
+        margin-top: 1rem;
+        outline: none;
+      }
+    input{
+      &:focus{
+       border-color: rgba(7, 192, 22, 0.795);
+      }
+    }
+      button{
+        background: rgba(7, 192, 22, 0.795);
+        cursor: pointer;
+        color: white;
+        &:hover{
+          background: rgba(3, 151, 15, 0.76);
+        }
+      }
+    }
+  }
+}
+
+.active{
+  // background: whitesmoke;
+  color:white;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+.staff{
+  display: none;
+}
+.show{
+  display: block;
+}

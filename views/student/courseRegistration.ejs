@@ -1,0 +1,440 @@
+
+<head>
+  
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .course-reg-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 50px auto;
+            max-width: 1200px;
+        }
+
+        .forms-container {
+            flex-basis: 35%;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+        .forms-container form {
+            margin-bottom: 20px;
+        }
+
+        .forms-container select, .forms-container button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .forms-container button {
+            background-color: #1a66b8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .forms-container button:hover {
+            background-color: #043e7c;
+        }
+
+        .saveRegistration {
+            flex-basis: 60%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            height: 26rem;
+            overflow-y: auto;
+        }
+
+        .saveRegistration h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .container {
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .child {
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        .regBtn, .delBtn, .regBtnd {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .regBtn {
+            background-color: #4caf50;
+        }
+
+        .regBtn:hover {
+            background-color: #45a049;
+        }
+
+        .delBtn, .regBtnd {
+            background-color: tomato;
+        }
+
+        h5 {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .card {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .card-header {
+            background-color: #233344;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .table-responsive {
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #23334488;
+            /* background-color: #007BFF;
+            color: white; */
+        }
+
+        td a {
+            text-decoration: none;
+            padding: 5px 10px;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        td a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+
+<div class="course-reg-container">
+    <div class="forms-container">
+        <form class="createRegistration">
+            <select>
+                <option value="">Choose session</option>
+                <% if (academicSession.length > 0) { %>
+                    <% academicSession.forEach((item, index) => { %>
+                        <option value="<%= item.academicSession %>"><%= item.academicSession %></option>
+                    <% }) %>
+                <% } %>
+            </select>
+
+            <select>
+                <option value="">Choose semester</option>
+                <option value="first">First semester</option>
+                <option value="second">Second semester</option>
+            </select>
+
+            <select name="level">
+                <option value="">Select level</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="400">400</option>
+                <option value="500">500</option>
+                <option value="600">600</option>
+            </select>
+
+            <button>Create Registration</button>
+        </form>
+
+        <form class="courseRegistration">
+            <select>
+                <option value="">Select course</option>
+                <% if (courses.length > 0) { %>
+                    <% courses.forEach((item, index) => { %>
+                        <option value="<%= item._id %>"><%= item.courseCode %> | <%= item.courseTitle %> | <%= item.type %> | <%= item.unit %></option>
+                    <% }) %>
+                <% } %>
+            </select>
+
+            <button>Add Course</button>
+        </form>
+    </div>
+
+    <div class="saveRegistration">
+        <% if (findRegistrationForm) { %>
+            <h3>
+                Session: <%= findRegistrationForm.session %><br>
+                Semester: <%= findRegistrationForm.semester %> semester<br>
+                Level: <%= findRegistrationForm.level %>
+            </h3>
+
+            <% if (course.length > 0) { %>
+                <% course.forEach((item, index) => { %>
+                    <div class="container">
+                        <div class="child">
+                            <p>Course Code: <%= item.courseCode %></p>
+                            <p>Course Title: <%= item.title %></p>
+                            <p>Course Unit: <%= item.courseUnit %></p>
+                            <p>Course Type: <%= item.type %></p>
+                            <button class="delBtn" onclick="deleteCourse('<%= item._id %>', '<%= findRegistrationForm._id %>')">Delete</button>
+                        </div>
+                    </div>
+                <% }) %>
+                <button class="regBtnd" onclick="deleteRegistration('<%= findRegistrationForm._id %>')">Delete Registration</button>
+                <button class="regBtn" onclick="saveRegistration('<%= findRegistrationForm._id %>')">Register Now</button>
+            <% } %>
+
+            <h5>Total Number of Units: <%= findRegistrationForm.totalUnit %></h5>
+        <% } else { %>
+            <p>No registration form found for the student.</p>
+        <% } %>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        Registered Courses
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Session</th>
+                        <th>Level</th>
+                        <th>Semester</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Session</th>
+                        <th>Level</th>
+                        <th>Semester</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <% if (RegisteredCourse) { %>
+                        <% for (let i of RegisteredCourse) { %>
+                            <tr>
+                                <td><%= i.session %> session</td>
+                                <td><%= i.level %>L</td>
+                                <td><%= i.semester %> semester</td>
+                                <td style="display: flex; gap: 12px;">
+                                    <a href='/api/student/view-registered-courses/<%= i._id %>'>View registered courses</a>
+                                    <a href='/api/student/check-result/<%= i._id %>'>Check result</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    <% } else { %>
+                        <h4>No registered courses yet</h4>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let createRegistration = document.querySelector('.createRegistration');
+    let courseRegistration = document.querySelector('.courseRegistration');
+
+    createRegistration.addEventListener('submit', async function(event) {
+        try {
+            event.preventDefault();
+            let data = event.target;
+            let session = data[0].options[data[0].selectedIndex].value;
+            let semester = data[1].options[data[1].selectedIndex].value;
+            let level = data[2].options[data[2].selectedIndex].value;
+
+            if (!session || !semester || !level) {
+                return alert('All fields are required');
+            }
+
+            const formData = {
+                session: session,
+                semester: semester,
+                level: level,
+                studentId: '<%= id %>',
+                studentName: '<%= name %>',
+                matNo: '<%= matNo %>'
+            };
+
+            let route = '/api/student/create-registration';
+            const res = await fetch(route, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const json = await res.json();
+            if (!res.ok) {
+                throw Error(json.data);
+            }
+            alert(json.data);
+            window.location.reload();
+        } catch (error) {
+            console.log(error.message);
+        }
+    });
+
+    courseRegistration.addEventListener('submit', async function(event) {
+        try {
+            event.preventDefault();
+            let data = event.target;
+            let course = data[0].options[data[0].selectedIndex].value;
+
+            if (!course) {
+                return alert('All fields are required');
+            }
+
+            const formData = {
+                course: course,
+                studentId: '<%= id %>',
+                studentName: '<%= name %>'
+            };
+
+            let route = '/api/student/student-course-registration';
+            const res = await fetch(route, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const json = await res.json();
+            if (!res.ok) {
+                throw Error(json.data);
+            }
+            alert(json.data);
+            window.location.reload();
+        } catch (error) {
+            console.log(error.message);
+        }
+    });
+
+    function deleteCourse(oneCourse, registrationId) {
+        try {
+            const state = confirm("Are you sure you want to delete this course?");
+            if (state) {
+                const data = { oneCourse, registrationId };
+                fetch("/api/student/delete-course", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then((serverJson) => {
+                    if (serverJson.ok) {
+                        return serverJson.json();
+                    }
+                })
+                .then((data) => {
+                    alert(data.data);
+                    location.reload();
+                });
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    function saveRegistration(regId) {
+        try {
+            const state = confirm("Press okay to register courses else continue registering");
+            if (state) {
+                const data = { regId };
+                fetch("/api/student/save-registration", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then((serverJson) => {
+                    if (serverJson.ok) {
+                        return serverJson.json();
+                    }
+                })
+                .then((data) => {
+                    alert(data.data);
+                    location.reload();
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    function deleteRegistration(regId) {
+        try {
+            const state = confirm("Are you sure you want to delete the registration form?");
+            if (state) {
+                const data = { regId };
+                fetch("/api/student/delete-registration-form", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then((serverJson) => {
+                    if (serverJson.ok) {
+                        return serverJson.json();
+                    }
+                })
+                .then((data) => {
+                    alert(data.data);
+                    location.reload();
+                });
+            }
+        } catch (error) {
+            console.log("great");
+        }
+    }
+</script>
+
+

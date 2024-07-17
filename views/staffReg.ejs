@@ -1,0 +1,98 @@
+
+<form action="/api/staff/signup" method="POST" enctype="multipart/form-data">
+    <div class="name">
+        <label>Enter passport</label>
+        <input type="file" name="file">
+    </div>
+
+    <div class="name">
+        <label>Enter fullname</label>
+        <input type="text" placeholder="Surname first" name="name">
+    </div>
+
+    <div class="staffid">
+        <label>Enter staff id</label>
+        <input type="text" name="staffId">
+    </div>
+
+    <div class="email">
+        <label>Enter email</label>
+        <input type="email" placeholder="" name="email">
+    </div>
+
+    <div class="password">
+        <label>Enter password</label>
+        <input type="password" name="password">
+    </div>
+
+    <div class="conf-password">
+        <label>Confirm password</label>
+        <input type="password" name="conpassword">
+    </div>
+
+    <div class="gender">
+        <select name="gender" id="">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+    </div>
+
+    <div class="faculty">
+            
+        <% if (data.length > 0){ %>
+            <select name="fact" id="fact" >
+                <option value="">Select faculty</option>
+                <% for(let i of data){%>
+                    <option value="<%= i.fact %>" data-fact="<%= i.fact %>" data-factId="<%= i._id %>"><%= i.fact %></option>
+                   <%}%>
+            </select>
+            <% } %>
+    </div>
+
+    <div class="department">
+ 
+            <select name="dept" id="dept">
+                <option value="">Select department</option>
+            </select>
+       
+    </div>
+<script>
+const fact = document.getElementById('fact')
+const dept = document.getElementById('dept')
+fact.oninput = async function(event){
+try{
+    const selectedOption = fact.options[fact.selectedIndex];
+    const faculty = selectedOption.getAttribute('data-fact')
+    const facultyId = selectedOption.getAttribute('data-factId')
+    console.log(faculty + ' '+ facultyId)
+    const res = await fetch(`/api/student/fetch-depts`,{
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({id:facultyId,facts:faculty})
+    })
+    const json = await res.json()
+
+    if(res.ok){
+        console.log(json.data)
+        
+        for(let i of json.data){
+            const option = document.createElement('option')
+            option.innerHTML = i
+            option.setAttribute('value',`${i}`)
+            dept.appendChild(option)
+        }
+        console.log(dept)
+    }
+}catch(error){
+    console.log(error.message)
+}
+}
+</script>
+
+    <button>Create Account</button>
+    
+</form>
+
+<a href="/"><button id="back">Back to home</button></a>
+</div>

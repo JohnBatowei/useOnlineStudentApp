@@ -1,0 +1,114 @@
+
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .session {
+      margin-bottom: 30px;
+      border: 1px solid rgba(128, 128, 128, 0.205);
+      border-radius: 5px;
+      padding: 14px 19px;
+    }
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .result-table th, .result-table td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-transform: capitalize;
+    }
+    .result-table th {
+      background-color: #f1f1f1;
+    }
+    .search-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .search-container input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 200px;
+    }
+  </style>
+</head>
+
+  <div class="container">
+    <h2>Transcript</h2>
+    <div>
+      <p style="text-transform: uppercase; font-weight: 600;">Name: <%= name %></p>
+      <p style="text-transform: uppercase; font-weight: 600;">MatNo: <%= admin.matNo %></p>
+      <img src="/upload/<%= passport %>" alt="Passport" style="max-width: 100px; border-radius: 50%;">
+    </div>
+
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Enter session to search">
+    </div>
+
+    <div id="resultsContainer">
+      <% for (const session in resultsBySession) { %>
+        <div class="session" data-session="<%= session %>">
+          <h3>Session: <%= session %></h3>
+          <% resultsBySession[session].forEach(result => { %>
+            <h4>Semester: <%= result.semester %></h4>
+            <h4>Level: <%= result.level %></h4>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Course Code</th>
+                  <th>Grade</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% result.courses.forEach(course => { %>
+                  <tr>
+                    <td><%= course.courseTitle %></td>
+                    <td><%= course.coursCode %></td>
+                    <td><%= course.grade %></td>
+                    <td><%= course.score %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const input = this.value.toLowerCase();
+      const sessions = document.querySelectorAll('.session');
+      
+      sessions.forEach(session => {
+        const sessionHeader = session.querySelector('h3').innerText.toLowerCase();
+        if (sessionHeader.includes(input)) {
+          session.style.display = 'block';
+        } else {
+          session.style.display = 'none';
+        }
+      });
+    });
+  </script>
+

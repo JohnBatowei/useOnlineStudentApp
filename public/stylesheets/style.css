@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400&display=swap");
+html {
+  font-family: "Mulish", sans-serif;
+  overflow: hidden;
+}
+
+.container-fluid {
+  height: 83dvh;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+#admin-navber {
+  background: rgb(17, 17, 17);
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+}
+
+#admin-aside {
+  background: black;
+}
+#admin-aside .nvitem .active {
+  background-color: steelblue;
+}
+#admin-aside .nvitem .nvitems:hover {
+  background-color: steelblue;
+}
+
+#panel-contant {
+  height: 87dvh;
+  overflow-y: scroll;
+  border-radius: 5px;
+}
+
+#img1 img {
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.log {
+  display: flex;
+  align-items: center;
+}
+.log form button {
+  background: black;
+  border: 1px solid transparent;
+  padding: 2px 15px;
+  border-color: grey;
+  color: white;
+  border-radius: 4px;
+}
+.log form button:hover {
+  border-color: red;
+}/*# sourceMappingURL=style.css.map */

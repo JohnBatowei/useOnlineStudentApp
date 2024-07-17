@@ -1,0 +1,189 @@
+<head>
+    <style>
+        .container-wrapper {
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 460px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        h2 {
+            text-align: left;
+            color: #111;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .passport, .name, .email, .password, .conf-password {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #111;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background-color: green;
+            color: #f3f3f3;
+            padding: 10px;
+            border: 1px solid #058b48;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #048b48;
+        }
+        .login-link {
+            color: #0073bb;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .login-link a {
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+
+<div class="container-wrapper">
+    <h2>Signup</h2>
+    <form>
+        <div class="passport">
+            <label>Enter passport</label>
+            <input type="file" accept="image/*" id="file" required>
+        </div>
+
+        <div class="name">
+            <label>Enter fullname</label>
+            <input type="text" placeholder="Surname first" required>
+        </div>
+
+        <div class="email">
+            <label>Enter email</label>
+            <input type="email" placeholder="" required>
+        </div>
+
+        <div class="password">
+            <label>Enter password</label>
+            <input type="password" required>
+        </div>
+
+        <div class="conf-password">
+            <label>Confirm password</label>
+            <input type="password" required>
+        </div>
+        <button>Create account</button>
+    </form>
+
+    <br><br>
+
+    <h2>Login</h2>
+    <form>
+        <div class="email">
+            <label>Enter email</label>
+            <input type="email" placeholder="" class="form2" required>
+        </div>
+
+        <div class="password">
+            <label>Enter password</label>
+            <input type="password" class="form2" required>
+        </div>
+        <button>Login</button>
+    </form>
+    <div class="login-link">
+        <a href="#">Forgot your password?</a>
+    </div>
+</div>
+
+<script>
+    const form = document.querySelectorAll('form')
+    const fileInput = document.querySelector('#file');
+    const form2 = document.querySelectorAll('.form2')
+
+    form[0].onsubmit = async (event)=>{
+        event.preventDefault()
+        try {
+            const route = '/api/admin/signup'
+            const target = event.target
+            const passport = fileInput.files[0]
+            const name = target[1].value
+            const email = target[2].value
+            const password = target[3].value
+            const conPassword = target[4].value
+            if(password !== conPassword){
+               return alert('passwords dont match')
+            }
+            let formData = new FormData();
+            formData.append('file',passport)
+            formData.append('name',name)
+            formData.append('email',email)
+            formData.append('password',password)
+
+            const res = await fetch(route,{
+                method:'POST',
+                enctype: 'multipart/form-data',
+                body: formData
+            })
+            
+            const json = await res.json()
+
+            if(!res.ok){
+                throw Error(json.data)
+            }
+
+            alert(json.data2)
+            window.location.href = json.data
+
+        } catch (error) {
+            console.log(error.message)
+            alert(error.message)
+        }
+    }
+
+    form[1].onsubmit = async (event)=>{
+        event.preventDefault()
+        try {
+            const route = '/api/admin/login'
+            const target = event.target
+            const email = form2[0].value.toLowerCase()
+            const password = form2[1].value
+
+            const formData = {email,password}
+
+            const res = await fetch(route,{
+             method:'POST',
+               headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            })
+            const json = await res.json()
+
+            if(!res.ok){
+                throw Error(json.data)
+            }
+            window.location.href = json.data
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+</script>
+
